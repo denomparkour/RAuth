@@ -15,10 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\RAuth.Application\RAuth.Application.csproj" />
     <ProjectReference Include="..\RAuth.Infrastructure\RAuth.Infrastructure.csproj" />
   </ItemGroup>
 

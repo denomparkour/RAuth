@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RAuth.Application\RAuth.Application.csproj" />
     <ProjectReference Include="..\RAuth.Core\RAuth.Core.csproj" />
   </ItemGroup>
 

@@ -183,7 +183,7 @@ namespace RAuth.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("RAuth.Core.Models.User.ApplicationUser", b =>
