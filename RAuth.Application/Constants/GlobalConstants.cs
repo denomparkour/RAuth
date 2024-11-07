@@ -10,6 +10,7 @@
         public static string OTP_EXPIRED = "OTP Expired. New OTP has been sent";
         public static string INVALID_OTP = "Invalid OTP";
         public static string OTP_NOT_FOUND = "OTP Not Found/Expired. Sent New OTP";
+        public static string USER_ALREADY_VERIFIED = "User Already Verified";
 
     }
 }
