@@ -9,7 +9,7 @@ namespace RAuth.Core.Models.User
         public DateOnly DateOfBirth { get; set; }
         public Address Address { get; set; }
         [ForeignKey("Address")]
-        public Guid AddressId { get; set; }
+        public Guid? AddressId { get; set; }
         public string ProfilePicture { get; set; }
     }
 }
