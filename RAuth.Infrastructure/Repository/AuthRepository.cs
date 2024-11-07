@@ -28,6 +28,12 @@ namespace RAuth.Infrastructure.Repository
             Random random = new();
             int Otp = random.Next(111111, 999999);
             var existingOtp = await _db.Otp.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var existingUser = await _userManager.FindByEmailAsync(user.Email!);
+            if(existingUser != null && existingUser.LockoutEnabled == false)
+            {
+                throw new FailedException(GlobalConstants.USER_ALREADY_VERIFIED);
+            }
+
             if (existingOtp != null)
             {
                 if (existingOtp.Expiry > DateTime.UtcNow)
