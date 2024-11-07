@@ -1,31 +1,37 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RAuth.Application.Constants;
 using RAuth.Application.DTO.AuthDTO;
 using RAuth.Application.Repository;
 using RAuth.Core.Exceptions;
+using RAuth.Core.Models.OtpModel;
 using RAuth.Core.Models.User;
+using RAuth.Infrastructure.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace RAuth.Infrastructure.Repository
 {
-    public class AuthRepository(UserManager<ApplicationUser> userManager, IMapper mapper, IConfiguration configuration) : IAuthRepository
+    public class AuthRepository(UserManager<ApplicationUser> userManager, IMapper mapper, IConfiguration configuration, ApplicationDbContext db) : IAuthRepository
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IConfiguration _configuration = configuration;
         private readonly IMapper _mapper = mapper;
+        private readonly ApplicationDbContext _db = db;
         public async Task<string> CreateUserAsync(CreateUserDTO createUser)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(createUser);
             var result = await _userManager.CreateAsync(user, createUser.Password);
             if (result.Succeeded)
             {
-                var newUser = await _userManager.FindByEmailAsync(user.Email!);
-                return GenerateJwtToken(newUser!);
+                var newUser = await _userManager.FindByEmailAsync(user.Email!) ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
+                await GenerateOtp(newUser);
+                return GlobalConstants.VERIFY_OTP_TO_CONTINUE;
+
             }
             if (result.Errors != null)
             {
@@ -36,8 +42,6 @@ namespace RAuth.Infrastructure.Repository
                 }
                 throw new CreateUserFailedException(errors);
             }
-           
-
              return GlobalConstants.FAILED;
         }
 
@@ -60,8 +64,37 @@ namespace RAuth.Infrastructure.Repository
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            Console.WriteLine("Came here for token");
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task GenerateOtp(ApplicationUser user)
+        {
+            Random random = new();
+            int Otp = random.Next(111111, 999999);
+            var existingOtp = await _db.Otp.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            if (existingOtp != null)
+            {
+                if(existingOtp.Expiry >  DateTime.UtcNow)
+                {
+                    return;
+                }
+                _db.Otp.Remove(existingOtp);
+                await _db.SaveChangesAsync();
+            }
+            var OtpData = new OTP()
+            {
+                Otp = Otp,
+                UserId = user.Id
+            };
+            try
+            {
+                await _db.Otp.AddAsync(OtpData);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.StackTrace);
+            }
         }
     }
 }
