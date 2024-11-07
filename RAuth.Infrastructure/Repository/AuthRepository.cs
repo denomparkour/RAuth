@@ -22,6 +22,58 @@ namespace RAuth.Infrastructure.Repository
         private readonly IConfiguration _configuration = configuration;
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _db = db;
+
+        public async Task GenerateOtp(ApplicationUser user)
+        {
+            Random random = new();
+            int Otp = random.Next(111111, 999999);
+            var existingOtp = await _db.Otp.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            if (existingOtp != null)
+            {
+                if (existingOtp.Expiry > DateTime.UtcNow)
+                {
+                    return;
+                }
+                _db.Otp.Remove(existingOtp);
+                await _db.SaveChangesAsync();
+            }
+            var OtpData = new OTP()
+            {
+                Otp = Otp,
+                UserId = user.Id
+            };
+            try
+            {
+                await _db.Otp.AddAsync(OtpData);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.StackTrace);
+            }
+        }
+
+        public async Task<string> VerifyOtp(VerifyUserDTO verifyUser)
+        {
+            var user = await _userManager.FindByEmailAsync(verifyUser.Email) ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
+            var existingOtp = await _db.Otp.FirstOrDefaultAsync(x => x.UserId == user.Id);
+            if(existingOtp == null || existingOtp.Expiry < DateTime.UtcNow)
+            {
+                await GenerateOtp(user);
+                return GlobalConstants.OTP_NOT_FOUND;
+            }
+            if(verifyUser.Otp == existingOtp.Otp)
+            {
+                user.LockoutEnabled = false;
+                await _userManager.UpdateAsync(user);
+                _db.Otp.Remove(existingOtp);
+                await _db.SaveChangesAsync();
+                return GenerateJwtToken(user);
+            }
+            return GlobalConstants.INVALID_OTP;
+            
+        }
+
         public async Task<string> CreateUserAsync(CreateUserDTO createUser)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(createUser);
@@ -67,34 +119,9 @@ namespace RAuth.Infrastructure.Repository
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task GenerateOtp(ApplicationUser user)
+        public async Task<string> VerifyUserAsync(VerifyUserDTO verifyUser)
         {
-            Random random = new();
-            int Otp = random.Next(111111, 999999);
-            var existingOtp = await _db.Otp.FirstOrDefaultAsync(x => x.UserId == user.Id);
-            if (existingOtp != null)
-            {
-                if(existingOtp.Expiry >  DateTime.UtcNow)
-                {
-                    return;
-                }
-                _db.Otp.Remove(existingOtp);
-                await _db.SaveChangesAsync();
-            }
-            var OtpData = new OTP()
-            {
-                Otp = Otp,
-                UserId = user.Id
-            };
-            try
-            {
-                await _db.Otp.AddAsync(OtpData);
-                await _db.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.StackTrace);
-            }
+            return await VerifyOtp(verifyUser);
         }
     }
 }
