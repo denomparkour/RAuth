@@ -7,5 +7,6 @@ namespace RAuth.Application.Repository
     {
         string GenerateJwtToken(ApplicationUser user);
         Task<string> CreateUserAsync(CreateUserDTO createUser);
+        Task GenerateOtp(ApplicationUser user);
     }
 }
