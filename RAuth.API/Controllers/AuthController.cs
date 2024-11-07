@@ -17,5 +17,11 @@ namespace RAuth.API.Controllers
             var result = await _mediator.Send(new CreateUserRequest { createUser = createUser });
             return Ok(ResponseBuilder.Build(result));
         }
+        [HttpPost("verify")]
+        public async Task<IActionResult> VerifyUserAsync([FromBody] VerifyUserDTO verifyUser)
+        {
+            var result = await _mediator.Send(new VerifyUserRequest { verifyUser = verifyUser });
+            return Ok(ResponseBuilder.Build(result));
+        }
     }
 }

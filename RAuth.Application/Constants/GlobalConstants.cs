@@ -5,6 +5,11 @@
         public static string SUCCESS = "Success";
         public static string FAILED = "Failed";
         public static string USER_NOT_FOUND = "User Not Found";
+
         public static string VERIFY_OTP_TO_CONTINUE = "Please verify OTP to Continue";
+        public static string OTP_EXPIRED = "OTP Expired. New OTP has been sent";
+        public static string INVALID_OTP = "Invalid OTP";
+        public static string OTP_NOT_FOUND = "OTP Not Found/Expired. Sent New OTP";
+
     }
 }

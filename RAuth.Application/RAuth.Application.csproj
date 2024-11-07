@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\AuthFeatures\Handlers\Queries\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\RAuth.Core\RAuth.Core.csproj" />
   </ItemGroup>
 
