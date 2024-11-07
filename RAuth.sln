@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAuth.API", "RAuth.API\RAuth.API.csproj", "{F423BDC4-AFD0-4EC3-99D3-8AEF7C4141FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAuth.Application", "RAuth.Application\RAuth.Application.csproj", "{4F370707-608B-40B3-A8C5-99A916DE4A87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAuth.Core", "RAuth.Core\RAuth.Core.csproj", "{A6D68CE6-79F9-4DD7-A89C-42BEE3A34526}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAuth.Infrastructure", "RAuth.Infrastructure\RAuth.Infrastructure.csproj", "{9F0E1122-B011-4326-9E24-618162B3B425}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F423BDC4-AFD0-4EC3-99D3-8AEF7C4141FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F423BDC4-AFD0-4EC3-99D3-8AEF7C4141FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F423BDC4-AFD0-4EC3-99D3-8AEF7C4141FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F423BDC4-AFD0-4EC3-99D3-8AEF7C4141FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F370707-608B-40B3-A8C5-99A916DE4A87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F370707-608B-40B3-A8C5-99A916DE4A87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F370707-608B-40B3-A8C5-99A916DE4A87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F370707-608B-40B3-A8C5-99A916DE4A87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6D68CE6-79F9-4DD7-A89C-42BEE3A34526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6D68CE6-79F9-4DD7-A89C-42BEE3A34526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6D68CE6-79F9-4DD7-A89C-42BEE3A34526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6D68CE6-79F9-4DD7-A89C-42BEE3A34526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F0E1122-B011-4326-9E24-618162B3B425}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F0E1122-B011-4326-9E24-618162B3B425}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F0E1122-B011-4326-9E24-618162B3B425}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F0E1122-B011-4326-9E24-618162B3B425}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6A0948EE-9D18-4360-85E0-65EE274BEA35}
+	EndGlobalSection
+EndGlobal
