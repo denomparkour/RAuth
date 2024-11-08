@@ -16,12 +16,13 @@ using System.Text;
 
 namespace RAuth.Infrastructure.Repository
 {
-    public class AuthRepository(UserManager<ApplicationUser> userManager, IMapper mapper, IConfiguration configuration, ApplicationDbContext db) : IAuthRepository
+    public class AuthRepository(UserManager<ApplicationUser> userManager, IMapper mapper, IConfiguration configuration, ApplicationDbContext db, SignInManager<ApplicationUser> signInManager) : IAuthRepository
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IConfiguration _configuration = configuration;
         private readonly IMapper _mapper = mapper;
         private readonly ApplicationDbContext _db = db;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
 
         public async Task GenerateOtp(ApplicationUser user)
         {
@@ -83,10 +84,16 @@ namespace RAuth.Infrastructure.Repository
         public async Task<string> CreateUserAsync(CreateUserDTO createUser)
         {
             ApplicationUser user = _mapper.Map<ApplicationUser>(createUser);
-            var result = await _userManager.CreateAsync(user, createUser.Password);
+            var result = createUser.Password != null ? await _userManager.CreateAsync(user, createUser.Password) : await _userManager.CreateAsync(user);
             if (result.Succeeded)
             {
                 var newUser = await _userManager.FindByEmailAsync(user.Email!) ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
+                if(newUser.PasswordHash == null)
+                {
+                    newUser.LockoutEnabled = false;
+                    await _userManager.UpdateAsync(newUser);
+                    return GenerateJwtToken(newUser); 
+                }
                 await GenerateOtp(newUser);
                 return GlobalConstants.VERIFY_OTP_TO_CONTINUE;
 
@@ -128,6 +135,30 @@ namespace RAuth.Infrastructure.Repository
         public async Task<string> VerifyUserAsync(VerifyUserDTO verifyUser)
         {
             return await VerifyOtp(verifyUser);
+        }
+
+        public async Task<string> GoogleOAuthAsync()
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if(info == null)
+            {
+                throw new NotFoundException(GlobalConstants.SIGN_IN_FAILED);
+            }
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+            var Profile = info.Principal.FindFirst("urn:google:picture");
+            var user = await _userManager.FindByEmailAsync(email);
+            if(user != null)
+            {
+                return GenerateJwtToken(user);
+            }
+            CreateUserDTO createUser = new()
+            {
+                Email = email,
+                UserName = name.Replace(" ", "").ToLower(),
+                ProfilePicture = Profile.Value,
+            };
+            return await CreateUserAsync(createUser);
         }
     }
 }

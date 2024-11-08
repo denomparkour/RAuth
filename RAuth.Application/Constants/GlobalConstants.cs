@@ -11,6 +11,8 @@
         public static string INVALID_OTP = "Invalid OTP";
         public static string OTP_NOT_FOUND = "OTP Not Found/Expired. Sent New OTP";
         public static string USER_ALREADY_VERIFIED = "User Already Verified";
+        public static string SIGN_IN_FAILED = "Error Occured during Sign In";
+        public static string SIGN_IN_SUCCESS_OAUTH = "Signed In Successfully using OAuth";
 
     }
 }
