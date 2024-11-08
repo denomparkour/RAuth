@@ -1,10 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RAuth.Application.DTO.AuthDTO;
 using RAuth.Application.DTO.ResponseDTO;
 using RAuth.Application.Features.AuthFeatures.Request;
-using RAuth.Core.Models.User;
 
 namespace RAuth.API.Controllers
 {
