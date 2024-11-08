@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using RAuth.Application.DTO.AuthDTO;
 using RAuth.Application.DTO.ResponseDTO;
 using RAuth.Application.Features.AuthFeatures.Request;
-using RAuth.Core.Exceptions;
 using RAuth.Core.Models.User;
-using System.Security.Claims;
 
 namespace RAuth.API.Controllers
 {
@@ -31,7 +29,7 @@ namespace RAuth.API.Controllers
         [HttpGet("login/google")]
         public async Task<IActionResult> LoginWithGoogle()
         {
-            var query = await _mediator.Send(new OAuthLoginRequest()); 
+            var query = await _mediator.Send(new OAuthLoginRequest());
             return Challenge(query, "google");
         }
         [HttpGet("login/google/handler")]
@@ -43,7 +41,7 @@ namespace RAuth.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> LoginAsync([FromBody] LoginUserDTO loginUser)
         {
-            var query = await _mediator.Send(new LoginUserRequest { LoginUser = loginUser});
+            var query = await _mediator.Send(new LoginUserRequest { LoginUser = loginUser });
             return Ok(ResponseBuilder.Build(query));
         }
     }

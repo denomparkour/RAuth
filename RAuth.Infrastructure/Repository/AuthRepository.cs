@@ -30,7 +30,7 @@ namespace RAuth.Infrastructure.Repository
             int Otp = random.Next(111111, 999999);
             var existingOtp = await _db.Otp.FirstOrDefaultAsync(x => x.UserId == user.Id);
             var existingUser = await _userManager.FindByEmailAsync(user.Email!);
-            if(existingUser != null && existingUser.LockoutEnabled == false)
+            if (existingUser != null && existingUser.LockoutEnabled == false)
             {
                 throw new FailedException(GlobalConstants.USER_ALREADY_VERIFIED);
             }
@@ -64,12 +64,12 @@ namespace RAuth.Infrastructure.Repository
         {
             var user = await _userManager.FindByEmailAsync(verifyUser.Email) ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
             var existingOtp = await _db.Otp.FirstOrDefaultAsync(x => x.UserId == user.Id);
-            if(existingOtp == null || existingOtp.Expiry < DateTime.UtcNow)
+            if (existingOtp == null || existingOtp.Expiry < DateTime.UtcNow)
             {
                 await GenerateOtp(user);
                 return GlobalConstants.OTP_NOT_FOUND;
             }
-            if(verifyUser.Otp == existingOtp.Otp)
+            if (verifyUser.Otp == existingOtp.Otp)
             {
                 user.LockoutEnabled = false;
                 await _userManager.UpdateAsync(user);
@@ -78,7 +78,7 @@ namespace RAuth.Infrastructure.Repository
                 return GenerateJwtToken(user);
             }
             return GlobalConstants.INVALID_OTP;
-            
+
         }
 
         public async Task<string> CreateUserAsync(CreateUserDTO createUser)
@@ -88,11 +88,11 @@ namespace RAuth.Infrastructure.Repository
             if (result.Succeeded)
             {
                 var newUser = await _userManager.FindByEmailAsync(user.Email!) ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
-                if(newUser.PasswordHash == null)
+                if (newUser.PasswordHash == null)
                 {
                     newUser.LockoutEnabled = false;
                     await _userManager.UpdateAsync(newUser);
-                    return GenerateJwtToken(newUser); 
+                    return GenerateJwtToken(newUser);
                 }
                 await GenerateOtp(newUser);
                 return GlobalConstants.VERIFY_OTP_TO_CONTINUE;
@@ -107,7 +107,7 @@ namespace RAuth.Infrastructure.Repository
                 }
                 throw new CreateUserFailedException(errors);
             }
-             return GlobalConstants.FAILED;
+            return GlobalConstants.FAILED;
         }
 
         public string GenerateJwtToken(ApplicationUser user)
@@ -140,7 +140,7 @@ namespace RAuth.Infrastructure.Repository
         public async Task<string> GoogleOAuthAsync()
         {
             var info = await _signInManager.GetExternalLoginInfoAsync();
-            if(info == null)
+            if (info == null)
             {
                 throw new NotFoundException(GlobalConstants.SIGN_IN_FAILED);
             }
@@ -148,7 +148,7 @@ namespace RAuth.Infrastructure.Repository
             var name = info.Principal.FindFirstValue(ClaimTypes.Name);
             var Profile = info.Principal.FindFirst("urn:google:picture");
             var user = await _userManager.FindByEmailAsync(email);
-            if(user != null)
+            if (user != null)
             {
                 return GenerateJwtToken(user);
             }

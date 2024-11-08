@@ -9,7 +9,7 @@ namespace RAuth.Application.Features.AuthFeatures.Handlers.Queries
         private readonly IAuthRepository _authRepository = authRepository;
         public async Task<string> Handle(OAuthRequest request, CancellationToken cancellationToken)
         {
-            return await _authRepository.GoogleOAuthAsync();  
+            return await _authRepository.GoogleOAuthAsync();
         }
     }
 }
