@@ -4,11 +4,11 @@
     {
         public FailedException()
         {
-            
+
         }
-        public FailedException(string message): base(message)
+        public FailedException(string message) : base(message)
         {
-            
+
         }
     }
 }

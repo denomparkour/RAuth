@@ -9,7 +9,7 @@ namespace RAuth.Application.Features.AuthFeatures.Handlers.Queries
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<string> Handle(VerifyUserRequest request, CancellationToken cancellationToken)
         {
-           return await _unitOfWork.AuthRepository.VerifyUserAsync(request.verifyUser);
+            return await _unitOfWork.AuthRepository.VerifyUserAsync(request.verifyUser);
         }
     }
 }

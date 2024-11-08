@@ -4,11 +4,11 @@
     {
         public CreateUserFailedException()
         {
-            
+
         }
         public CreateUserFailedException(string message) : base(message)
         {
-            
+
         }
     }
 }
