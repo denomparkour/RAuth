@@ -41,5 +41,11 @@ namespace RAuth.API.Controllers
             var query = await _mediator.Send(new LoginUserRequest { LoginUser = loginUser });
             return Ok(ResponseBuilder.Build(query));
         }
+        [HttpPost("refresh")]
+        public async Task<IActionResult> RefreshAsync(RefreshTokenDTO refreshToken)
+        {
+            var query = await _mediator.Send(new RefreshTokenRequest { RefreshToken = refreshToken });
+            return Ok(ResponseBuilder.Build(query));
+        }
     }
 }

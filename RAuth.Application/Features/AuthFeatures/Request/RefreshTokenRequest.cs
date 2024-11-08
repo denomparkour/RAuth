@@ -4,8 +4,8 @@ using RAuth.Application.DTO.ResponseDTO;
 
 namespace RAuth.Application.Features.AuthFeatures.Request
 {
-    public class CreateUserRequest : IRequest<LoginResponseDTO>
+    public class RefreshTokenRequest : IRequest<string>
     {
-        public CreateUserDTO createUser { get; set; }
+        public RefreshTokenDTO RefreshToken { get; set; }
     }
 }

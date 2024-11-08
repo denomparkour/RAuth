@@ -183,7 +183,7 @@ namespace RAuth.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Address");
+                    b.ToTable("Address", (string)null);
                 });
 
             modelBuilder.Entity("RAuth.Core.Models.OtpModel.OTP", b =>
@@ -206,7 +206,7 @@ namespace RAuth.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Otp");
+                    b.ToTable("Otp", (string)null);
                 });
 
             modelBuilder.Entity("RAuth.Core.Models.TokenStoreModel.UserTokenStore", b =>
@@ -230,7 +230,7 @@ namespace RAuth.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserTokenStore");
+                    b.ToTable("UserTokenStore", (string)null);
                 });
 
             modelBuilder.Entity("RAuth.Core.Models.User.ApplicationUser", b =>
