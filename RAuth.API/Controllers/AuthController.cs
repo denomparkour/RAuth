@@ -10,10 +10,9 @@ namespace RAuth.API.Controllers
 {
     [ApiController]
     [Route("auth")]
-    public class AuthController(IMediator mediator, SignInManager<ApplicationUser> signInManager) : Controller
+    public class AuthController(IMediator mediator) : Controller
     {
         private readonly IMediator _mediator = mediator;
-        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         [HttpPost("create")]
         public async Task<IActionResult> CreateUserAsync([FromBody] CreateUserDTO createUser)
         {
