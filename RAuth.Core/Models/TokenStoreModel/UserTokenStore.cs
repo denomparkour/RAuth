@@ -13,6 +13,6 @@ namespace RAuth.Core.Models.TokenStoreModel
         [ForeignKey("User")]
         public string UserId { get; set; }
         public string RefreshToken { get; set; }
-        public DateTime ExpiryTime { get; set; } = DateTime.UtcNow.AddDays(15);
+        public DateTime ExpiryTime { get; set; } = DateTime.UtcNow.AddDays(7);
     }
 }
