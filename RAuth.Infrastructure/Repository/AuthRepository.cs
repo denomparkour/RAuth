@@ -160,5 +160,16 @@ namespace RAuth.Infrastructure.Repository
             };
             return await CreateUserAsync(createUser);
         }
+
+        public async Task<string> LoginUserAsync(LoginUserDTO loginUser)
+        {
+            var existingUser = await _userManager.FindByEmailAsync(loginUser.Email) ?? throw new FailedException(GlobalConstants.INVALID_USER);
+            bool isValid = await _userManager.CheckPasswordAsync(existingUser, loginUser.Password);
+            if (!isValid)
+            {
+                throw new FailedException(GlobalConstants.INVALID_USER);
+            }
+            return GenerateJwtToken(existingUser);
+        }
     }
 }

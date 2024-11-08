@@ -40,5 +40,11 @@ namespace RAuth.API.Controllers
             var query = await _mediator.Send(new OAuthRequest());
             return Ok(ResponseBuilder.Build(query));
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginAsync([FromBody] LoginUserDTO loginUser)
+        {
+            var query = await _mediator.Send(new LoginUserRequest { LoginUser = loginUser});
+            return Ok(ResponseBuilder.Build(query));
+        }
     }
 }
