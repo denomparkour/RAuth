@@ -1,6 +1,6 @@
 ﻿namespace RAuth.Application.Constants
 {
-    public interface GlobalConstants
+    public static class GlobalConstants
     {
         public static string SUCCESS = "Success";
         public static string FAILED = "Failed";
@@ -14,6 +14,8 @@
         public static string SIGN_IN_FAILED = "Error Occured during Sign In";
         public static string SIGN_IN_SUCCESS_OAUTH = "Signed In Successfully using OAuth";
         public static string INVALID_USER = "Invalid Username/Password";
+        public static string INVALID_REFRESH_TOKEN = "Invalid Refresh Token";
+        public static string REFRESH_TOKEN_EXPIRED = "Refresh Token Expired";
 
     }
 }
