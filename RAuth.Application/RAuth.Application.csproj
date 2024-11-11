@@ -17,4 +17,8 @@
     <ProjectReference Include="..\RAuth.Core\RAuth.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\UserFeatures\Handlers\Queries\" />
+  </ItemGroup>
+
 </Project>
