@@ -17,5 +17,6 @@ namespace RAuth.Application.Repository
         Task<string> RefreshAsync(RefreshTokenDTO refreshToken);
         Task<string> GenerateRefreshToken(string UserId);
         Task<string> LogoutAsync();
+        Task<GetRAuthUserResponseDTO> GetRAuthUserAsync(GetRAuthUserDTO getRAuthUser);
     }
 }

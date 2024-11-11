@@ -2,7 +2,7 @@
 
 namespace RAuth.Application.Features.RAuthFeatures.Requests
 {
-    public class LogoutRAuthClient : IRequest<string>
+    public class LogoutRAuthClientRequest : IRequest<string>
     {
     }
 }
