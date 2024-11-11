@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RAuth.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using RAuth.Infrastructure.Data;
 namespace RAuth.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241111095815_RedirectUriIsList")]
+    partial class RedirectUriIsList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,30 +248,6 @@ namespace RAuth.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RedirectUri");
-                });
-
-            modelBuilder.Entity("RAuth.Core.Models.TokenStoreModel.ClientTokenStore", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ExpiryTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("RefreshToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ClientTokenStore");
                 });
 
             modelBuilder.Entity("RAuth.Core.Models.TokenStoreModel.UserTokenStore", b =>
@@ -514,17 +493,6 @@ namespace RAuth.Infrastructure.Migrations
                     b.HasOne("RAuth.Core.Models.User.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("RAuth.Core.Models.TokenStoreModel.ClientTokenStore", b =>
-                {
-                    b.HasOne("RAuth.Core.Models.User.ClientUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("User");
                 });

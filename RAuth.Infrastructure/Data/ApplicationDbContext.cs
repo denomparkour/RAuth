@@ -12,7 +12,6 @@ namespace RAuth.Infrastructure.Data
     {
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<RedirectUri>(x => x.HasKey(k => new { k.UserId, k.ClientId }));
             base.OnModelCreating(builder);
         }
         public DbSet<Address> Address { get; set; }
@@ -21,5 +20,6 @@ namespace RAuth.Infrastructure.Data
         public DbSet<RedirectUri> RedirectUri { get; set; }
         public DbSet<ClientCredStore> ClientCredStore { get; set; }
         public DbSet<ClientUser> ClientUser { get; set; }
+        public DbSet<ClientTokenStore> ClientTokenStore { get; set; }
     }
 }
