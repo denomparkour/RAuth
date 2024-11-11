@@ -21,11 +21,12 @@ using System.Text;
 
 namespace RAuth.Infrastructure.Repository
 {
-    public class RAuthRepository(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<ClientUser> userManager, IMapper mapper, IConfiguration configuration) : IRAuthRepository
+    public class RAuthRepository(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor, UserManager<ClientUser> userManager, UserManager<ApplicationUser> applicationUserManager, IMapper mapper, IConfiguration configuration) : IRAuthRepository
     {
         private readonly ApplicationDbContext _db = db;
         private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
         private readonly UserManager<ClientUser> _userManager = userManager;
+        private readonly UserManager<ApplicationUser> _applicationUserManager = applicationUserManager;
         private readonly IMapper _mapper = mapper;
         private readonly IConfiguration _configuration = configuration;
 
@@ -196,6 +197,14 @@ namespace RAuth.Infrastructure.Repository
             {
                 throw new FailedException(ex.Message);
             }
+        }
+
+        public async Task<GetRAuthUserResponseDTO> GetRAuthUserAsync(GetRAuthUserDTO getRAuthUser)
+        {
+            var existingUser = await _applicationUserManager.FindByNameAsync(getRAuthUser.UserName) ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
+            var address = await _db.Address.FirstOrDefaultAsync(x => x.Id == existingUser.AddressId);
+            GetRAuthUserResponseDTO getRAuthUserResponseDTO = new() { Address = address, DateOfBirth = existingUser.DateOfBirth, Email = existingUser.Email, PhoneNumber = existingUser.PhoneNumber, ProfilePicture = existingUser.ProfilePicture, UserName = existingUser.UserName };
+            return getRAuthUserResponseDTO;
         }
     }
 }
