@@ -197,7 +197,7 @@ namespace RAuth.Infrastructure.Repository
         public async Task<string> RefreshAsync(RefreshTokenDTO refreshToken)
         {
             var existingToken = await _db.UserTokenStore.FirstOrDefaultAsync(x => x.RefreshToken == refreshToken.RefreshToken) ?? throw new FailedException(GlobalConstants.INVALID_REFRESH_TOKEN);
-            if(existingToken.ExpiryTime < DateTime.UtcNow)
+            if (existingToken.ExpiryTime < DateTime.UtcNow)
             {
                 throw new FailedException(GlobalConstants.REFRESH_TOKEN_EXPIRED);
             }
@@ -213,7 +213,7 @@ namespace RAuth.Infrastructure.Repository
             rng.GetBytes(randomBytes);
             string refreshToken = Convert.ToBase64String(randomBytes);
 
-            var existingToken = await _db.UserTokenStore.FirstOrDefaultAsync(x => x.UserId ==  UserId);
+            var existingToken = await _db.UserTokenStore.FirstOrDefaultAsync(x => x.UserId == UserId);
             if (existingToken != null)
             {
                 _db.UserTokenStore.Remove(existingToken);

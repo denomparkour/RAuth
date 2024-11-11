@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RAuth.Application.DTO.ResponseDTO;
 using RAuth.Application.DTO.UserDTO;
 using RAuth.Application.Features.UserFeatures.Request;
-using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 
 namespace RAuth.API.Controllers

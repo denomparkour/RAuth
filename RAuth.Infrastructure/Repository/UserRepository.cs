@@ -14,7 +14,7 @@ namespace RAuth.Infrastructure.Repository
     public class UserRepository(ApplicationDbContext db, UserManager<ApplicationUser> userManager, IMapper mapper) : IUserRepository
     {
         private readonly ApplicationDbContext _db = db;
-        private readonly UserManager<ApplicationUser> _userManager = userManager; 
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IMapper _mapper = mapper;
         public async Task<string> UpdateUserInfoAsync(string UserId, UpdateUserDTO updateUser)
         {
