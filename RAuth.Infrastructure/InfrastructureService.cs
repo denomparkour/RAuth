@@ -23,6 +23,7 @@ namespace RAuth.Infrastructure
             service.AddScoped<IAuthRepository, AuthRepository>();
             service.AddScoped<IUserRepository, UserRepository>();
             service.AddScoped<IRAuthRepository, RAuthRepository>();
+            service.AddIdentityCore<ClientUser>(options => options.User.RequireUniqueEmail = true).AddEntityFrameworkStores<ApplicationDbContext>().AddSignInManager<SignInManager<ClientUser>>().AddDefaultTokenProviders();
             service.AddIdentityCore<ApplicationUser>(options => options.User.RequireUniqueEmail = true).AddEntityFrameworkStores<ApplicationDbContext>().AddSignInManager<SignInManager<ApplicationUser>>().AddDefaultTokenProviders();
             service.AddAuthentication(options =>
             {
@@ -83,7 +84,7 @@ namespace RAuth.Infrastructure
 
                 };
             });
-
+            service.AddHttpContextAccessor();
             return service;
         }
     }

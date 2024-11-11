@@ -19,5 +19,9 @@
 
         public static string ADDRESS_NOT_FOUND = "Address Not Found";
 
+        public static string UNAUTHORIZED = "User Unauthorized";
+        public static string CREATE_CLIENT_FAILED = "Failed to Create Client";
+        public static string EXISTING_CLIENT_NOT_FOUND = "Existing Client Not Found";
+
     }
 }
