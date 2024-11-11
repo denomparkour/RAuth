@@ -1,5 +1,4 @@
 ﻿using RAuth.Application.Repository;
-using RAuth.Infrastructure.Data;
 
 namespace RAuth.Infrastructure.Repository
 {
