@@ -17,5 +17,7 @@
         public static string INVALID_REFRESH_TOKEN = "Invalid Refresh Token";
         public static string REFRESH_TOKEN_EXPIRED = "Refresh Token Expired";
 
+        public static string ADDRESS_NOT_FOUND = "Address Not Found";
+
     }
 }

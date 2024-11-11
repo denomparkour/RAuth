@@ -21,6 +21,7 @@ namespace RAuth.Infrastructure
             service.AddSqlServer<ApplicationDbContext>(configuration.GetConnectionString("Db"));
             service.AddScoped<IUnitOfWork, UnitOfWork>();
             service.AddScoped<IAuthRepository, AuthRepository>();
+            service.AddScoped<IUserRepository, UserRepository>();
             service.AddIdentityCore<ApplicationUser>(options => options.User.RequireUniqueEmail = true).AddEntityFrameworkStores<ApplicationDbContext>().AddSignInManager<SignInManager<ApplicationUser>>().AddDefaultTokenProviders();
             service.AddAuthentication(options =>
             {
