@@ -231,5 +231,20 @@ namespace RAuth.Infrastructure.Repository
             }
             return refreshToken;
         }
+
+        public async Task<string> LogoutAsync(RefreshTokenDTO refreshToken)
+        {
+            var existingToken = await _db.UserTokenStore.FirstOrDefaultAsync(x => x.RefreshToken == refreshToken.RefreshToken) ?? throw new NotFoundException(GlobalConstants.INVALID_REFRESH_TOKEN);
+            try
+            {
+                _db.UserTokenStore.Remove(existingToken);
+                await _db.SaveChangesAsync();
+                return GlobalConstants.SUCCESS;
+            }
+            catch (Exception ex)
+            {
+                throw new FailedException(ex.Message);
+            }
+        }
     }
 }

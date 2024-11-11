@@ -47,5 +47,11 @@ namespace RAuth.API.Controllers
             var query = await _mediator.Send(new RefreshTokenRequest { RefreshToken = refreshToken });
             return Ok(ResponseBuilder.Build(query));
         }
+        [HttpPost("logout")]
+        public async Task<IActionResult> LogoutAsync(RefreshTokenDTO refreshToken)
+        {
+            var query = await _mediator.Send(new LogoutUserRequest { RefreshToken = refreshToken });
+            return Ok(ResponseBuilder.Build(query));
+        }
     }
 }
