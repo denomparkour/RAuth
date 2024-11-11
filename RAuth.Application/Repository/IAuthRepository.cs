@@ -15,5 +15,6 @@ namespace RAuth.Application.Repository
         Task<string> VerifyOtp(VerifyUserDTO verifyUser);
         Task<LoginResponseDTO> GoogleOAuthAsync();
         Task<string> GenerateRefreshToken(string UserId);
+        Task<string> LogoutAsync(RefreshTokenDTO refreshToken);
     }
 }
