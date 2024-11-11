@@ -20,5 +20,6 @@ namespace RAuth.Infrastructure.Data
         public DbSet<UserTokenStore> UserTokenStore { get; set; }
         public DbSet<RedirectUri> RedirectUri { get; set; }
         public DbSet<ClientCredStore> ClientCredStore { get; set; }
+        public DbSet<ClientUser> ClientUser { get; set; }
     }
 }

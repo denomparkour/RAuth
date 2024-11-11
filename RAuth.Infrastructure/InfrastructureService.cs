@@ -22,6 +22,7 @@ namespace RAuth.Infrastructure
             service.AddScoped<IUnitOfWork, UnitOfWork>();
             service.AddScoped<IAuthRepository, AuthRepository>();
             service.AddScoped<IUserRepository, UserRepository>();
+            service.AddScoped<IRAuthRepository, RAuthRepository>();
             service.AddIdentityCore<ApplicationUser>(options => options.User.RequireUniqueEmail = true).AddEntityFrameworkStores<ApplicationDbContext>().AddSignInManager<SignInManager<ApplicationUser>>().AddDefaultTokenProviders();
             service.AddAuthentication(options =>
             {
