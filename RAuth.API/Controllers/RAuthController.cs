@@ -52,12 +52,5 @@ namespace RAuth.API.Controllers
             var result = await _mediator.Send(new LogoutRAuthClientRequest());
             return Ok(ResponseBuilder.Build(result));
         }
-        [Authorize]
-        [HttpGet("get")]
-        public async Task<IActionResult> GetAsync([FromQuery] GetRAuthUserDTO getRAuthUser)
-        {
-            var result = await _mediator.Send(new GetRAuthClientRequest { GetRAuthUserDTO = getRAuthUser });
-            return Ok(ResponseBuilder.Build(result));
-        }
     }
 }
