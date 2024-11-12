@@ -53,7 +53,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 app.UseCors("SignalRPolicy");
 
 app.UseAuthentication();
