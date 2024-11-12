@@ -1,5 +1,6 @@
 using Microsoft.OpenApi.Models;
 using RAuth.Application;
+using RAuth.Application.RTC;
 using RAuth.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,8 +54,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("SignalRPolicy");
 
+app.UseAuthentication();
 app.UseAuthorization();
+
+
+app.MapHub<RtcHub>("/authenticate");
 
 app.MapControllers();
 

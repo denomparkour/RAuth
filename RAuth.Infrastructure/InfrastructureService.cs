@@ -43,7 +43,22 @@ namespace RAuth.Infrastructure
                     ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(configuration["Jwt:Key"]!))
                 };
-            }).AddGoogle("google", o =>
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/authenticate"))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+
+        }).AddGoogle("google", o =>
             {
                 o.ClientId = configuration["OAuth:ClientId"]!;
                 o.ClientSecret = configuration["OAuth:ClientSecret"]!;

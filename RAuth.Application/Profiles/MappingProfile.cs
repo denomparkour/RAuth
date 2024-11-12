@@ -23,6 +23,7 @@ namespace RAuth.Application.Profiles
                 .ForMember(dest => dest.ProfilePicture, opt => opt.MapFrom(src => src.ProfilePictureUrl))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email));
             CreateMap<ClientCredStore, CreateRAuthResponseDTO>().ReverseMap();
+            CreateMap<ApplicationUser, GetRAuthUserResponseDTO>();
         }
     }
 }
