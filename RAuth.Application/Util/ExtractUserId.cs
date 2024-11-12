@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace RAuth.Application.Util
 {
-    public  class ExtractUserId
+    public class ExtractUserId
     {
         public static string Extract(IHttpContextAccessor httpContext)
         {

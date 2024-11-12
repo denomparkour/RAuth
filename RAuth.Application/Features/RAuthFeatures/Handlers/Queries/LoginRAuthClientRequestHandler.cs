@@ -10,7 +10,7 @@ namespace RAuth.Application.Features.RAuthFeatures.Handlers.Queries
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         public async Task<LoginResponseDTO> Handle(RAuthClientLoginRequest request, CancellationToken cancellationToken)
         {
-          return await _unitOfWork.RAuthRepository.LoginClientAsync(request.RAuthClientLogin);
+            return await _unitOfWork.RAuthRepository.LoginClientAsync(request.RAuthClientLogin);
         }
     }
 

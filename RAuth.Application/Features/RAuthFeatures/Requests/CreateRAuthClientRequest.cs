@@ -5,6 +5,6 @@ namespace RAuth.Application.Features.RAuthFeatures.Requests
 {
     public class CreateRAuthClientRequest : IRequest<CreateRAuthResponseDTO>
     {
-        public CreateRAuthDTO createRAuth {  get; set; }
+        public CreateRAuthDTO createRAuth { get; set; }
     }
 }

@@ -5,6 +5,6 @@ namespace RAuth.Application.Features.RAuthFeatures.Requests
 {
     public class UpdateRAuthClientRequest : IRequest<string>
     {
-        public UpdateRAuthDTO updateRAuth {  get; set; }
+        public UpdateRAuthDTO updateRAuth { get; set; }
     }
 }

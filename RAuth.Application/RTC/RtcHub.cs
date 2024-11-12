@@ -1,12 +1,10 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using RAuth.Application.Constants;
 using RAuth.Application.DTO.RAuthDTO;
 using RAuth.Application.Repository;
 using RAuth.Core.Exceptions;
-using RAuth.Core.Models.AddressModel;
 using RAuth.Core.Models.User;
 using System.Security.Claims;
 
@@ -29,7 +27,7 @@ namespace RAuth.Application.RTC
             }
             await base.OnDisconnectedAsync(exception);
         }
-        
+
         public async Task RequestAccess(string username)
         {
             var requesterId = Context.User?.FindFirst(ClaimTypes.Name)?.Value ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
@@ -45,7 +43,7 @@ namespace RAuth.Application.RTC
         {
             var request = _pendingRequests.Values.FirstOrDefault(r => r.ReceiverId == userId) ?? throw new NotFoundException("No Requests Found");
             _pendingRequests.Remove(request.RequesterId);
-            if(isApproved)
+            if (isApproved)
             {
                 var user = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
                 GetRAuthUserDTO rAuthUserDTO = new();

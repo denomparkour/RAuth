@@ -6,6 +6,6 @@ namespace RAuth.Application.Features.RAuthFeatures.Requests
 {
     public class RAuthClientLoginRequest : IRequest<LoginResponseDTO>
     {
-       public LoginRAuthDTO RAuthClientLogin { get; set; }
+        public LoginRAuthDTO RAuthClientLogin { get; set; }
     }
 }

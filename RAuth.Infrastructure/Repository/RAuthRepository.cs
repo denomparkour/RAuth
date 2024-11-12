@@ -69,7 +69,7 @@ namespace RAuth.Infrastructure.Repository
                 clientCredStore.ClientSecret = GenerateRAuthSecrets.GenerateClientSecret();
                 await _db.ClientCredStore.AddAsync(clientCredStore);
                 await _db.SaveChangesAsync();
-                var response =  _mapper.Map<CreateRAuthResponseDTO>(clientCredStore);
+                var response = _mapper.Map<CreateRAuthResponseDTO>(clientCredStore);
                 response.RefreshToken = await GenerateRefreshToken(newClientUser.Id);
                 response.JWT = GenerateJwtToken(newClientUser);
                 return response;
@@ -130,7 +130,7 @@ namespace RAuth.Infrastructure.Repository
         public async Task<string> VerifyClientAsync(VerifyClientDTO verifyClient)
         {
             var userId = ExtractUserId.Extract(_httpContextAccessor);
-            if(verifyClient.ClientId != userId)
+            if (verifyClient.ClientId != userId)
             {
                 throw new FailedException(GlobalConstants.INVALID_USER);
             }

@@ -15,7 +15,7 @@ namespace RAuth.Application
                 options.AddPolicy("SignalRPolicy",
                     policy =>
                     {
-                        policy.WithOrigins("https://127.0.0.1:5500") 
+                        policy.WithOrigins("https://127.0.0.1:5500")
                               .AllowAnyHeader()
                               .AllowAnyMethod()
                               .AllowCredentials()

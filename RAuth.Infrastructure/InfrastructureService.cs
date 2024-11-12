@@ -58,47 +58,47 @@ namespace RAuth.Infrastructure
                     }
                 };
 
-        }).AddGoogle("google", o =>
-            {
-                o.ClientId = configuration["OAuth:ClientId"]!;
-                o.ClientSecret = configuration["OAuth:ClientSecret"]!;
-                o.SaveTokens = true;
-                o.TokenEndpoint = "https://oauth2.googleapis.com/token";
-                o.CallbackPath = "/user/oauth/google";
-                o.AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
-                o.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
-                o.Scope.Add("openid");
-                o.Scope.Add("email");
-                o.Scope.Add("profile");
-                o.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", ClaimValueTypes.String);
-                o.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", ClaimValueTypes.Email);
-                o.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id", ClaimValueTypes.String);
-                o.ClaimActions.MapJsonKey("urn:google:picture", "picture", ClaimValueTypes.String);
-                o.Events = new OAuthEvents
+            }).AddGoogle("google", o =>
                 {
-                    OnTicketReceived = context =>
+                    o.ClientId = configuration["OAuth:ClientId"]!;
+                    o.ClientSecret = configuration["OAuth:ClientSecret"]!;
+                    o.SaveTokens = true;
+                    o.TokenEndpoint = "https://oauth2.googleapis.com/token";
+                    o.CallbackPath = "/user/oauth/google";
+                    o.AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+                    o.UserInformationEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
+                    o.Scope.Add("openid");
+                    o.Scope.Add("email");
+                    o.Scope.Add("profile");
+                    o.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", ClaimValueTypes.String);
+                    o.ClaimActions.MapJsonKey(ClaimTypes.Email, "email", ClaimValueTypes.Email);
+                    o.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id", ClaimValueTypes.String);
+                    o.ClaimActions.MapJsonKey("urn:google:picture", "picture", ClaimValueTypes.String);
+                    o.Events = new OAuthEvents
                     {
-                        return Task.CompletedTask;
-                    },
-                    OnCreatingTicket = async context =>
-                    {
-                        var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
-                        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", context.AccessToken);
-                        var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
-                        response.EnsureSuccessStatusCode();
-                        var user = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+                        OnTicketReceived = context =>
+                        {
+                            return Task.CompletedTask;
+                        },
+                        OnCreatingTicket = async context =>
+                        {
+                            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+                            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", context.AccessToken);
+                            var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, context.HttpContext.RequestAborted);
+                            response.EnsureSuccessStatusCode();
+                            var user = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
 
-                        context.RunClaimActions(user.RootElement);
-                    },
-                    OnRemoteFailure = context =>
-                    {
-                        Console.WriteLine("OAuth Remote Failure:");
-                        Console.WriteLine($"Failure: {context.Failure.Message}");
-                        return Task.CompletedTask;
-                    }
+                            context.RunClaimActions(user.RootElement);
+                        },
+                        OnRemoteFailure = context =>
+                        {
+                            Console.WriteLine("OAuth Remote Failure:");
+                            Console.WriteLine($"Failure: {context.Failure.Message}");
+                            return Task.CompletedTask;
+                        }
 
-                };
-            });
+                    };
+                });
             service.AddHttpContextAccessor();
             return service;
         }

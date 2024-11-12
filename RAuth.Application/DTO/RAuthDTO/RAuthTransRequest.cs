@@ -4,6 +4,6 @@
     {
         public string RequesterId { get; set; }
         public string ReceiverId { get; set; }
-        public DateTime ExpiryTime { get; set; } = DateTime.UtcNow.AddMinutes(1); 
+        public DateTime ExpiryTime { get; set; } = DateTime.UtcNow.AddMinutes(1);
     }
 }

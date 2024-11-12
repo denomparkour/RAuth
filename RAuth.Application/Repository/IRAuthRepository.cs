@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-using RAuth.Application.Constants;
-using RAuth.Application.DTO.AuthDTO;
+﻿using RAuth.Application.DTO.AuthDTO;
 using RAuth.Application.DTO.RAuthDTO;
 using RAuth.Application.DTO.ResponseDTO;
-using RAuth.Core.Exceptions;
 
 namespace RAuth.Application.Repository
 {

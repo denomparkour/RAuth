@@ -1,7 +1,4 @@
-﻿using RAuth.Application.DTO.RAuthDTO;
-using System.Security.Cryptography;
-
-namespace RAuth.Application.Util
+﻿namespace RAuth.Application.Util
 {
     public class GenerateRAuthSecrets
     {
