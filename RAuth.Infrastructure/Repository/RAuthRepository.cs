@@ -163,7 +163,7 @@ namespace RAuth.Infrastructure.Repository
 
 
         public async Task<CreateRAuthResponseDTO> CreateClientAsync(CreateRAuthDTO createRAuth)
-            {
+        {
             var existingUser = await _userManager.FindByEmailAsync(createRAuth.Email);
             if (existingUser != null)
             {

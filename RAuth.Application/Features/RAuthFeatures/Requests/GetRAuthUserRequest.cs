@@ -5,6 +5,6 @@ namespace RAuth.Application.Features.RAuthFeatures.Requests
 {
     public class GetRAuthUserRequest : IRequest<GetRAuthUserResponseDTO>
     {
-        public GetRAuthUserDTO GetRAuthUserDTO {  get; set; }
+        public GetRAuthUserDTO GetRAuthUserDTO { get; set; }
     }
 }

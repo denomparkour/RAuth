@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RAuth.Application.Constants;
 using RAuth.Application.DTO.AuthDTO;
 using RAuth.Application.DTO.RAuthDTO;
 using RAuth.Application.DTO.ResponseDTO;
