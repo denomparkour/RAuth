@@ -23,5 +23,9 @@
         public static string CREATE_CLIENT_FAILED = "Failed to Create Client";
         public static string EXISTING_CLIENT_NOT_FOUND = "Existing Client Not Found";
 
+        public static string INVALID_CLIENT_DETAILS = "Invalid Client Details";
+        public static string INVALID_CLIENT_CREDENTIALS = "Invalid Client Credentials";
+        public static string AUTH_TOKEN_EXPIRED = "Auth Token Expired";
+
     }
 }

@@ -17,6 +17,7 @@ using RAuth.Core.Models.User;
 using RAuth.Infrastructure.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace RAuth.Infrastructure.Repository
@@ -53,8 +54,116 @@ namespace RAuth.Infrastructure.Repository
             return tokenHandler.WriteToken(token);
         }
 
-        public async Task<CreateRAuthResponseDTO> CreateClientAsync(CreateRAuthDTO createRAuth)
+        public string EncryptClientData(string clientId, string clientSecret)
         {
+            string hexKey = _configuration["Encrypt:Key"]!;
+
+            byte[] keyBytes = new byte[hexKey.Length / 2];
+            for (int i = 0; i < keyBytes.Length; i++)
+            {
+                keyBytes[i] = Convert.ToByte(hexKey.Substring(i * 2, 2), 16);
+            }
+
+            byte[] validKey = keyBytes.Take(32).ToArray();
+
+            string expiryTime = DateTime.UtcNow.AddSeconds(30).ToString("O");
+            string dataToEncrypt = $"{clientId}:{clientSecret}:{expiryTime}";
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = validKey;
+                aesAlg.GenerateIV();
+
+                using (MemoryStream msEncrypt = new MemoryStream())
+                {
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, aesAlg.CreateEncryptor(), CryptoStreamMode.Write))
+                    {
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(dataToEncrypt);
+                        }
+                    }
+
+                    byte[] encryptedData = msEncrypt.ToArray();
+                    byte[] result = new byte[aesAlg.IV.Length + encryptedData.Length];
+                    Array.Copy(aesAlg.IV, 0, result, 0, aesAlg.IV.Length);
+                    Array.Copy(encryptedData, 0, result, aesAlg.IV.Length, encryptedData.Length);
+
+                    return Convert.ToBase64String(result);
+                }
+            }
+        }
+
+        public VerifyClientDTO DecryptClientData(string encryptedDataBase64)
+        {
+            string hexKey = _configuration["Encrypt:Key"]!;
+
+            try
+            {
+                byte[] keyBytes = new byte[hexKey.Length / 2];
+                for (int i = 0; i < keyBytes.Length; i++)
+                {
+                    keyBytes[i] = Convert.ToByte(hexKey.Substring(i * 2, 2), 16);
+                }
+
+                byte[] validKey = keyBytes.Take(32).ToArray();
+                byte[] encryptedData = Convert.FromBase64String(encryptedDataBase64);
+                byte[] iv = encryptedData.Take(16).ToArray();
+                byte[] cipherText = encryptedData.Skip(16).ToArray();
+
+                using (Aes aesAlg = Aes.Create())
+                {
+                    aesAlg.Key = validKey;
+                    aesAlg.IV = iv;
+
+                    using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                    {
+                        using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, aesAlg.CreateDecryptor(), CryptoStreamMode.Read))
+                        {
+                            using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                            {
+                                string decryptedData = srDecrypt.ReadToEnd();
+
+                                var parts = decryptedData.Split(new char[] { ':' }, 3);
+
+                                if (parts.Length == 3)
+                                {
+                                    string clientId = parts[0];
+                                    string clientSecret = parts[1];
+                                    DateTime expiryTime = DateTime.Parse(parts[2], null, System.Globalization.DateTimeStyles.RoundtripKind);
+
+                                    if (expiryTime < DateTime.UtcNow)
+                                    {
+                                        throw new FailedException(GlobalConstants.AUTH_TOKEN_EXPIRED);
+                                    }
+
+                                    return new VerifyClientDTO
+                                    {
+                                        ClientId = clientId,
+                                        ClientSecret = clientSecret,
+                                        ExpiryTime = expiryTime
+                                    };
+                                }
+                                else
+                                {
+                                    throw new FailedException("Decrypted data does not have expected format.");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new FailedException(ex.Message);
+            }
+        }
+
+
+
+
+        public async Task<CreateRAuthResponseDTO> CreateClientAsync(CreateRAuthDTO createRAuth)
+            {
             var existingUser = await _userManager.FindByEmailAsync(createRAuth.Email);
             if (existingUser != null)
             {
@@ -129,20 +238,11 @@ namespace RAuth.Infrastructure.Repository
 
         public async Task<string> VerifyClientAsync(VerifyClientDTO verifyClient)
         {
-            var userId = ExtractUserId.Extract(_httpContextAccessor);
-            if (verifyClient.ClientId != userId)
-            {
-                throw new FailedException(GlobalConstants.INVALID_USER);
-            }
-            var existingUser = await _userManager.FindByIdAsync(userId);
-            if (existingUser == null)
-            {
-                throw new FailedException(GlobalConstants.USER_NOT_FOUND);
-            }
-            var existingClientInfo = await _db.ClientCredStore.FirstOrDefaultAsync(x => x.ClientId == userId) ?? throw new FailedException(GlobalConstants.EXISTING_CLIENT_NOT_FOUND);
+            var existingUser = await _userManager.FindByIdAsync(verifyClient.ClientId) ?? throw new FailedException(GlobalConstants.INVALID_CLIENT_DETAILS);
+            var existingClientInfo = await _db.ClientCredStore.FirstOrDefaultAsync(x => x.ClientId == existingUser.Id) ?? throw new FailedException(GlobalConstants.EXISTING_CLIENT_NOT_FOUND);
             if (existingClientInfo.ClientSecret == verifyClient.ClientSecret)
             {
-                return GlobalConstants.SUCCESS;
+                return EncryptClientData(verifyClient.ClientId, verifyClient.ClientSecret);
             }
             return GlobalConstants.FAILED;
         }
@@ -202,6 +302,12 @@ namespace RAuth.Infrastructure.Repository
 
         public async Task<GetRAuthUserResponseDTO> GetRAuthUserAsync(GetRAuthUserDTO getRAuthUser)
         {
+            VerifyClientDTO decryptedData = DecryptClientData(getRAuthUser.EncryptedKey);
+            string verifyClient = await VerifyClientAsync(decryptedData);
+            if (verifyClient == GlobalConstants.FAILED)
+            {
+                throw new FailedException(GlobalConstants.INVALID_CLIENT_CREDENTIALS);
+            }
             var existingUser = await _applicationUserManager.FindByNameAsync(getRAuthUser.UserName) ?? throw new NotFoundException(GlobalConstants.USER_NOT_FOUND);
             var address = await _db.Address.FirstOrDefaultAsync(x => x.Id == existingUser.AddressId);
             GetRAuthUserResponseDTO getRAuthUserResponseDTO = new() { Address = address, DateOfBirth = existingUser.DateOfBirth, Email = existingUser.Email, PhoneNumber = existingUser.PhoneNumber, ProfilePicture = existingUser.ProfilePicture, UserName = existingUser.UserName };

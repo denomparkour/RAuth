@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RAuth.Application.Constants;
 using RAuth.Application.DTO.AuthDTO;
 using RAuth.Application.DTO.RAuthDTO;
 using RAuth.Application.DTO.ResponseDTO;
@@ -50,6 +51,18 @@ namespace RAuth.API.Controllers
         public async Task<IActionResult> LogoutAsync()
         {
             var result = await _mediator.Send(new LogoutRAuthClientRequest());
+            return Ok(ResponseBuilder.Build(result));
+        }
+        [HttpPost("verify")]
+        public async Task<IActionResult> VerifyToken([FromBody] VerifyClientDTO verify)
+        {
+            var result = await _mediator.Send(new VerifyRAuthClientRequest { verifyClient = verify });
+            return Ok(ResponseBuilder.Build(result));
+        }
+        [HttpPost("retrieve")]
+        public async Task<IActionResult> RetrieveUserAsync(GetRAuthUserDTO getRAuthUser)
+        {
+            var result = await _mediator.Send(new GetRAuthUserRequest { GetRAuthUserDTO = getRAuthUser });
             return Ok(ResponseBuilder.Build(result));
         }
     }
