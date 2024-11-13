@@ -66,7 +66,7 @@ namespace RAuth.Infrastructure.Repository
 
             byte[] validKey = keyBytes.Take(32).ToArray();
 
-            string expiryTime = DateTime.UtcNow.AddSeconds(30).ToString("O");
+            string expiryTime = DateTime.UtcNow.AddMinutes(2).ToString("O");
             string dataToEncrypt = $"{clientId}:{clientSecret}:{expiryTime}";
 
             using (Aes aesAlg = Aes.Create())
