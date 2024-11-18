@@ -38,7 +38,7 @@ namespace RAuth.Application.RTC
             request.RequesterId = requesterId;
             request.ReceiverId = existingUser.Id;
             _pendingRequests[requesterId] = request;
-            await Clients.User(existingUser.Id).SendAsync("ReceiveMessage", clientUser.UserName, accessToken);
+            await Clients.User(existingUser.Id).SendAsync("ReceiveMessage", clientUser.OrganizationName, accessToken);
         }
 
         public async Task RespondToRequest(string userId, string authUrl, bool isApproved)

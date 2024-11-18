@@ -45,7 +45,7 @@ namespace RAuth.Infrastructure.Repository
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-                Audience = _configuration["Jwt:Audience"],
+                Audience = _configuration["Jwt:Audience"],-
                 Issuer = _configuration["Jwt:Issuer"],
 
             };
